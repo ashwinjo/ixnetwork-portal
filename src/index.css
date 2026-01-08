@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-obsidian-0 text-obsidian-textPrimary antialiased selection:bg-obsidian-accent selection:text-obsidian-0;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply antialiased text-slate-600 bg-slate-50;
+}
