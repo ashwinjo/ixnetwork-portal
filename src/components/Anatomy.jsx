@@ -36,12 +36,12 @@ const Anatomy = () => {
     }
 
     return (
-        <section id="anatomy" className="py-20 bg-slate-50">
+        <section id="anatomy" className="py-20 bg-obsidian-0">
             <div className="max-w-4xl mx-auto px-6">
                 <div className="text-center mb-16 animate-fade-in-up">
-                    <span className="text-blue-600 font-bold tracking-wider text-sm uppercase mb-2 block">Core Concept</span>
-                    <h2 className="text-3xl font-bold text-slate-900 mb-4">Anatomy of an IxNetwork Test</h2>
-                    <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                    <span className="text-obsidian-accent font-bold tracking-wider text-sm uppercase mb-2 block">Core Concept</span>
+                    <h2 className="text-3xl font-bold text-obsidian-textPrimary mb-4">Anatomy of an IxNetwork Test</h2>
+                    <p className="text-lg text-obsidian-textSecondary max-w-2xl mx-auto">
                         Every automation script follows the same 5-phase lifecycle. Master this pattern to master the tool.
                     </p>
                 </div>
@@ -50,9 +50,9 @@ const Anatomy = () => {
                     {testPhases.map((phase, index) => (
                         <div
                             key={phase.id}
-                            className={`bg-white rounded-xl border transition-all duration-300 overflow-hidden ${expandedPhase === phase.id
-                                ? 'border-blue-200 shadow-lg ring-1 ring-blue-100'
-                                : 'border-slate-200 shadow-sm hover:border-blue-300'
+                            className={`bg-obsidian-1 rounded-xl border transition-all duration-300 overflow-hidden ${expandedPhase === phase.id
+                                ? 'border-obsidian-accent shadow-[0_0_15px_rgba(0,242,255,0.1)]'
+                                : 'border-obsidian-2 shadow-sm hover:border-obsidian-accent/50'
                                 }`}
                         >
                             <button
@@ -60,20 +60,20 @@ const Anatomy = () => {
                                 className="w-full flex items-center justify-between p-6 text-left focus:outline-none"
                             >
                                 <div className="flex items-center gap-4">
-                                    <div className={`flex items-center justify-center w-10 h-10 rounded-full font-bold text-lg transition-colors ${expandedPhase === phase.id ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-500'
+                                    <div className={`flex items-center justify-center w-10 h-10 rounded-full font-bold text-lg transition-colors ${expandedPhase === phase.id ? 'bg-obsidian-accent text-obsidian-0 shadow-[0_0_10px_rgba(0,242,255,0.4)]' : 'bg-obsidian-2 text-obsidian-textSecondary'
                                         }`}>
                                         {index + 1}
                                     </div>
                                     <div>
-                                        <h3 className={`font-bold text-lg ${expandedPhase === phase.id ? 'text-blue-900' : 'text-slate-900'}`}>
+                                        <h3 className={`font-bold text-lg ${expandedPhase === phase.id ? 'text-obsidian-accent' : 'text-obsidian-textPrimary'}`}>
                                             {phase.title}
                                         </h3>
                                         {expandedPhase !== phase.id && (
-                                            <p className="text-sm text-slate-500 truncate max-w-xs sm:max-w-md">{phase.description}</p>
+                                            <p className="text-sm text-obsidian-textSecondary truncate max-w-xs sm:max-w-md">{phase.description}</p>
                                         )}
                                     </div>
                                 </div>
-                                <div className={`text-slate-400 transition-transform duration-300 ${expandedPhase === phase.id ? 'rotate-180' : ''}`}>
+                                <div className={`text-obsidian-textSecondary transition-transform duration-300 ${expandedPhase === phase.id ? 'rotate-180 text-obsidian-accent' : ''}`}>
                                     <ChevronDown />
                                 </div>
                             </button>
@@ -81,26 +81,26 @@ const Anatomy = () => {
                             <div className={`grid transition-all duration-300 ease-in-out ${expandedPhase === phase.id ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
                                 }`}>
                                 <div className="overflow-hidden">
-                                    <div className="p-6 pt-0 border-t border-slate-100">
+                                    <div className="p-6 pt-0 border-t border-obsidian-2">
                                         <div className="flex flex-col gap-8 mt-6">
                                             {/* Left Col: Description & Pitfalls */}
                                             <div className="w-full space-y-6">
                                                 <div>
-                                                    <h4 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
-                                                        <PhaseIcon id={phase.id} className="text-blue-500" />
+                                                    <h4 className="font-semibold text-obsidian-textPrimary mb-2 flex items-center gap-2">
+                                                        <PhaseIcon id={phase.id} className="text-obsidian-accent" />
                                                         Goal
                                                     </h4>
-                                                    <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                                                    <p className="text-obsidian-textSecondary text-sm leading-relaxed mb-4">
                                                         {phase.description}
                                                     </p>
 
                                                     {phase.subActivities && (
-                                                        <div className="bg-slate-50 rounded-lg p-3 border border-slate-100">
-                                                            <h5 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Key Steps</h5>
-                                                            <ul className="text-sm text-slate-700 space-y-1">
+                                                        <div className="bg-obsidian-2 rounded-lg p-3 border border-obsidian-2">
+                                                            <h5 className="text-xs font-bold text-obsidian-textSecondary uppercase tracking-wider mb-2">Key Steps</h5>
+                                                            <ul className="text-sm text-obsidian-textPrimary space-y-1">
                                                                 {phase.subActivities.map((activity, i) => (
                                                                     <li key={i} className="flex items-start gap-2">
-                                                                        <span className="text-blue-400 mt-1">•</span>
+                                                                        <span className="text-obsidian-accent mt-1">•</span>
                                                                         <span>{activity}</span>
                                                                     </li>
                                                                 ))}
@@ -108,11 +108,11 @@ const Anatomy = () => {
                                                         </div>
                                                     )}
                                                 </div>
-                                                <div className="bg-amber-50 rounded-lg p-4 border border-amber-100">
-                                                    <h4 className="font-semibold text-amber-800 mb-2 text-sm flex items-center gap-2">
+                                                <div className="bg-amber-500/10 rounded-lg p-4 border border-amber-500/20">
+                                                    <h4 className="font-semibold text-amber-500 mb-2 text-sm flex items-center gap-2">
                                                         <AlertTriangle size={14} /> Common Pitfalls
                                                     </h4>
-                                                    <ul className="text-sm text-amber-700 space-y-2 list-disc list-outside ml-4">
+                                                    <ul className="text-sm text-amber-400/90 space-y-2 list-disc list-outside ml-4">
                                                         {phase.pitfalls.map((pitfall, i) => (
                                                             <li key={i}>{pitfall}</li>
                                                         ))}
@@ -121,15 +121,15 @@ const Anatomy = () => {
                                             </div>
 
                                             {/* Right Col: Code */}
-                                            <div className="w-full bg-slate-900 rounded-lg overflow-hidden flex flex-col">
-                                                <div className="flex items-center bg-slate-800 px-2 overflow-x-auto scrollbar-hide">
+                                            <div className="w-full bg-obsidian-0 rounded-lg overflow-hidden flex flex-col border border-obsidian-2">
+                                                <div className="flex items-center bg-obsidian-2 px-2 overflow-x-auto scrollbar-hide border-b border-obsidian-2">
                                                     {phase.approaches.map(approach => (
                                                         <button
                                                             key={approach.name}
                                                             onClick={() => setTab(phase.id, approach.name)}
                                                             className={`px-4 py-2 text-xs font-mono transition-colors border-b-2 whitespace-nowrap ${(activeTabs[phase.id] || phase.approaches[0].name) === approach.name
-                                                                ? 'border-blue-500 text-white'
-                                                                : 'border-transparent text-slate-400 hover:text-slate-200'
+                                                                ? 'border-obsidian-accent text-obsidian-accent bg-obsidian-accent/5'
+                                                                : 'border-transparent text-obsidian-textSecondary hover:text-obsidian-textPrimary'
                                                                 }`}
                                                         >
                                                             {approach.name}
@@ -142,12 +142,12 @@ const Anatomy = () => {
                                                             phase.approaches.find(a => (activeTabs[phase.id] || phase.approaches[0].name) === a.name).code,
                                                             `${phase.id}-code`
                                                         )}
-                                                        className="absolute top-2 right-2 p-2 rounded bg-slate-700/50 text-slate-300 hover:bg-slate-700 hover:text-white opacity-0 group-hover:opacity-100 transition-all"
+                                                        className="absolute top-2 right-2 p-2 rounded bg-obsidian-2 text-obsidian-textSecondary hover:text-obsidian-accent opacity-0 group-hover:opacity-100 transition-all border border-obsidian-2"
                                                         title="Copy to clipboard"
                                                     >
                                                         {copiedBlock === `${phase.id}-code` ? <Check size={14} className="text-green-400" /> : <Copy size={14} />}
                                                     </button>
-                                                    <pre className="font-mono text-xs md:text-sm text-blue-100 whitespace-pre-wrap">
+                                                    <pre className="font-mono text-xs md:text-sm text-obsidian-accent/90 whitespace-pre-wrap">
                                                         <code>
                                                             {phase.approaches.find(a => (activeTabs[phase.id] || phase.approaches[0].name) === a.name).code}
                                                         </code>

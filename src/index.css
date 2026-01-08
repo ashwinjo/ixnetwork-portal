@@ -12,6 +12,8 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
-  @apply antialiased text-slate-600 bg-slate-50;
+@layer base {
+  body {
+    @apply antialiased text-obsidian-textPrimary bg-obsidian-0;
+  }
 }

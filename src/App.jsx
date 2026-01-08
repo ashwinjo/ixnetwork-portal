@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
-import WhatIsIxNetwork from './components/WhatIsIxNetwork';
 import Foundation from './components/Foundation';
 import Anatomy from './components/Anatomy';
 import Resources from './components/Resources';
@@ -16,8 +15,8 @@ function App() {
       {currentView === 'home' ? (
         <>
           <main>
+            <Header onNavigate={setCurrentView} />
             <Hero onNavigate={setCurrentView} />
-            <WhatIsIxNetwork />
             <Foundation />
             <Anatomy />
             <Resources />
