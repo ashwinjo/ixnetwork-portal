@@ -183,7 +183,7 @@ const Foundation = () => {
                             </div>
                             <p className="text-sm text-obsidian-textSecondary leading-relaxed">
                                 Use Resource Manager for <span className="text-obsidian-textPrimary font-semibold">bulk configuration</span> and rapid environment setup.
-                                It allows you to export/import large configuration blocks as JSON/YAML, bypassing the need for individual object creation calls.
+                                It allows you to export/import large configuration blocks as JSON, bypassing the need for individual object creation calls.
                             </p>
                             <div className="mt-4 flex flex-wrap gap-2">
                                 {['Config Export', 'Batch Import', 'JSON Support'].map(tag => (
