@@ -36,47 +36,10 @@ const Resources = () => {
                         </a>
                     ))}
                 </div>
-
-                {/* Helpful Links List */}
-                <div className="bg-obsidian-1 rounded-2xl p-8 md:p-12 border border-obsidian-2">
-                    <h3 className="font-bold text-xl text-obsidian-textPrimary mb-8 border-b border-obsidian-2 pb-4">
-                        Quick Links & References
-                    </h3>
-                    <div className="grid md:grid-cols-2 gap-x-12 gap-y-4">
-                        {helpfulLinks.map((link) => (
-                            <a
-                                key={link.title}
-                                href={link.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center justify-between p-3 rounded-lg hover:bg-obsidian-2 hover:shadow-sm transition-all group border border-transparent hover:border-obsidian-2"
-                            >
-                                <div className="flex items-center gap-3">
-                                    <div className="text-obsidian-textSecondary group-hover:text-obsidian-accent transition-colors">
-                                        <link.icon size={18} />
-                                    </div>
-                                    <span className="font-medium text-obsidian-textPrimary group-hover:text-obsidian-accent">{link.title}</span>
-                                </div>
-                                <span className={`text-[10px] uppercase font-bold px-2 py-1 rounded-full ${getCategoryColor(link.category)}`}>
-                                    {link.category}
-                                </span>
-                            </a>
-                        ))}
-                    </div>
-                </div>
+                {/* Helpful Links List section removed as per user request */}
             </div>
         </section>
     );
-};
-
-const getCategoryColor = (category) => {
-    switch (category) {
-        case 'Documentation': return 'bg-blue-500/10 text-blue-400 border border-blue-500/20';
-        case 'Package': return 'bg-amber-500/10 text-amber-400 border border-amber-500/20';
-        case 'Updates': return 'bg-green-500/10 text-green-400 border border-green-500/20';
-        case 'Support': return 'bg-purple-500/10 text-purple-400 border border-purple-500/20';
-        default: return 'bg-obsidian-2 text-obsidian-textSecondary border border-obsidian-3';
-    }
 };
 
 export default Resources;

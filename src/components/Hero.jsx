@@ -42,7 +42,7 @@ const Hero = (props) => {
                         icon={Download}
                         title="Download"
                         desc="Get IxNetwork & tools"
-                        href="https://support.ixiacom.com"
+                        href="https://support.ixiacom.com/support-overview/product-support/downloads-updates"
                     />
                     <ActionCard
                         icon={Play}
@@ -123,7 +123,7 @@ const Hero = (props) => {
                                         <div className="space-y-6">
                                             <DeployStep number="1" title="Get the Image" icon={Download}>
                                                 <p className="text-sm text-obsidian-textSecondary mb-2">
-                                                    Download the IxNetwork Web Edition Tar File from the download page and copy it to your Linux host.
+                                                    Download the IxNetwork Web Edition Tar File from the <a href="https://support.ixiacom.com/support-overview/product-support/downloads-updates" target="_blank" rel="noopener noreferrer" className="text-obsidian-accent hover:underline">download page</a> and copy it to your Linux host.
                                                 </p>
                                             </DeployStep>
                                             <DeployStep number="2" title="Prerequisites" icon={Terminal}>

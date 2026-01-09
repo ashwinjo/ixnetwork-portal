@@ -59,13 +59,6 @@ const Header = ({ onNavigate }) => {
                 {/* Desktop Nav */}
                 <nav className="hidden md:flex items-center gap-8">
                     {/* Navigation links removed as per user request */}
-                    <a
-                        href="#start"
-                        onClick={(e) => handleNavClick(e, { view: 'home', href: '#start' })}
-                        className="bg-obsidian-accent/10 border border-obsidian-accent/20 text-obsidian-accent px-5 py-2 rounded-lg text-sm font-medium hover:bg-obsidian-accent hover:text-obsidian-0 transition-all duration-300 shadow-[0_0_10px_rgba(0,242,255,0.1)] hover:shadow-[0_0_20px_rgba(0,242,255,0.4)]"
-                    >
-                        Get Started
-                    </a>
                 </nav>
 
                 {/* Mobile Menu Toggle */}
@@ -82,13 +75,6 @@ const Header = ({ onNavigate }) => {
                 <div className="absolute top-full left-0 right-0 bg-obsidian-1 border-b border-obsidian-2 p-6 md:hidden shadow-xl animate-in slide-in-from-top-5">
                     <nav className="flex flex-col gap-4">
                         {/* Navigation links removed */}
-                        <a
-                            href="#start"
-                            className="bg-obsidian-accent text-obsidian-0 px-5 py-3 rounded-lg text-center font-bold mt-2 hover:shadow-[0_0_20px_rgba(0,242,255,0.3)] transition-all"
-                            onClick={(e) => handleNavClick(e, { view: 'home', href: '#start' })}
-                        >
-                            Get Started
-                        </a>
                     </nav>
                 </div>
             )}
