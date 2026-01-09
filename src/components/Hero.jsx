@@ -1,10 +1,22 @@
 import React, { useState } from 'react';
-import { Download, Play, Code, BookOpen, ArrowRight, ChevronDown, ChevronUp, Terminal, Monitor, FileText, Database } from 'lucide-react';
+import { Download, Play, Code, BookOpen, ArrowRight, ChevronDown, ChevronUp, Terminal, Monitor, FileText, Database, ExternalLink } from 'lucide-react';
 import { versions } from '../data/versions';
 
 const Hero = (props) => {
     const [showDeployGuide, setShowDeployGuide] = useState(false);
     const [activeDeployTab, setActiveDeployTab] = useState('docker');
+    const [restPyVersion, setRestPyVersion] = useState(versions.restPy);
+
+    React.useEffect(() => {
+        fetch('https://pypi.org/pypi/ixnetwork-restpy/json')
+            .then(res => res.json())
+            .then(data => {
+                if (data.info && data.info.version) {
+                    setRestPyVersion(data.info.version);
+                }
+            })
+            .catch(err => console.error('Error fetching restPy version:', err));
+    }, []);
 
     return (
         <section className="relative pt-32 pb-20 px-6 overflow-hidden">
@@ -14,18 +26,24 @@ const Hero = (props) => {
             <div className="max-w-6xl mx-auto text-center">
 
                 {/* Version Ticker */}
-                {/* Version Ticker */}
-                <div className="inline-flex items-center gap-4 bg-obsidian-1/60 backdrop-blur-sm border border-obsidian-2 px-4 py-2 rounded-full mb-8 text-xs font-mono text-obsidian-textSecondary animate-fade-in-up">
+                <div className="inline-flex items-center gap-4 bg-obsidian-1/60 backdrop-blur-sm border border-obsidian-2 px-4 py-3 rounded-full mb-12 text-[11px] font-mono text-obsidian-textSecondary animate-fade-in-up">
                     <div className="flex items-center gap-2">
                         <span className="w-2 h-2 bg-obsidian-accent rounded-full animate-pulse shadow-[0_0_8px_rgba(0,242,255,0.6)]" />
-                        <span className="font-semibold text-obsidian-textPrimary">Latest Versions:</span>
+                        <span className="font-semibold text-obsidian-textPrimary uppercase tracking-wider">restPy:</span>
                     </div>
-                    <span className="hidden sm:inline text-obsidian-3">|</span>
-                    <div className="flex gap-4">
-                        <span>IxNetwork: <span className="text-obsidian-accent font-bold">{versions.ixNetwork}</span></span>
-                        <span>IxOS: <span className="text-obsidian-accent font-bold">{versions.ixOS}</span></span>
-                        <span>restPy: <span className="text-obsidian-accent font-bold">{versions.restPy}</span></span>
-                    </div>
+                    <span className="text-obsidian-accent font-bold px-2 py-0.5 bg-obsidian-accent/10 rounded border border-obsidian-accent/20">
+                        {restPyVersion}
+                    </span>
+                    <span className="text-obsidian-3">/</span>
+                    <a
+                        href="https://openixia.github.io/ixnetwork_restpy/#/release"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 hover:text-obsidian-accent transition-colors group px-1"
+                    >
+                        <span>Release Notes</span>
+                        <ExternalLink size={12} className="opacity-50 group-hover:opacity-100 transition-opacity" />
+                    </a>
                 </div>
 
                 {/* Main Heading */}
@@ -100,7 +118,7 @@ const Hero = (props) => {
 
                         {/* Tabs */}
                         <div className="flex border-b border-obsidian-2">
-                            {['Docker', 'KVM'].map((tab) => (
+                            {['Docker', 'KVM', 'On Chassis'].map((tab) => (
                                 <button
                                     key={tab}
                                     onClick={() => setActiveDeployTab(tab.toLowerCase())}
@@ -236,7 +254,6 @@ docker load -i Ixia_IxNetworkWeb_Docker_9.00.tar`}
                                             <strong>Deployment Option:</strong> Install KVM WebUI as a separate VM.
                                         </div>
                                     </div>
-
                                     <div className="bg-obsidian-0 rounded-lg p-4 overflow-x-auto border border-obsidian-2">
                                         <pre className="font-mono text-sm text-obsidian-accent whitespace-pre-wrap">
                                             {`$ sudo virt-install \\
@@ -255,6 +272,31 @@ docker load -i Ixia_IxNetworkWeb_Docker_9.00.tar`}
                                     <p className="text-xs text-obsidian-textSecondary italic">
                                         * Ensure you adjust paths and resource allocations based on your host configurations.
                                     </p>
+                                </div>
+                            )}
+
+                            {activeDeployTab === 'on chassis' && (
+                                <div className="space-y-8 animate-fade-in py-12 text-center">
+                                    <div className="bg-obsidian-2 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6 text-obsidian-accent shadow-[0_0_20px_rgba(0,242,255,0.1)]">
+                                        <Monitor size={32} />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-2xl font-bold text-obsidian-textPrimary mb-3">On Chassis .WAF Installation</h3>
+                                        <p className="text-obsidian-textSecondary max-w-lg mx-auto leading-relaxed">
+                                            Detailed instructions for deploying the Linux API Server directly on the chassis via <strong>.WAF</strong> file are available on the OpenIxia portal.
+                                        </p>
+                                    </div>
+                                    <div className="pt-4">
+                                        <a
+                                            href="https://www.openixia.com/tutorials?subject=ixNetwork/linuxApiServer&page=chassisInstallation.html"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-2 bg-obsidian-accent text-obsidian-0 px-8 py-4 rounded-xl font-bold hover:bg-obsidian-accentHover transition-all shadow-[0_10px_20px_-10px_rgba(0,242,255,0.4)] hover:-translate-y-1"
+                                        >
+                                            View Chassis Installation Guide
+                                            <ExternalLink size={18} />
+                                        </a>
+                                    </div>
                                 </div>
                             )}
                         </div>

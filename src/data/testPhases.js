@@ -11,23 +11,32 @@ export const testPhases = [
             {
                 name: 'Python (RestPy)',
                 language: 'python',
-                code: `session = SessionAssistant(IpAddress=apiServerIp, RestPort=None, UserName='admin', Password='admin', 
-                           SessionName=None, SessionId=None, ApiKey=None,
+                code: `"""
+Phase 1: Setup
+Initialize session, connect to API server, and map physical ports.
+"""
+from ixnetwork_restpy import SessionAssistant
+
+# Initialize session with full logging for auditability
+session = SessionAssistant(IpAddress=apiServerIp, RestPort=443, UserName='admin', 
+                           Password='admin', SessionName='Automation_Session', 
                            ClearConfig=True, LogLevel='all', LogFilename='restpy.log')
 
 ixNetwork = session.Ixnetwork
+ixNetwork.info('--- Phase 1: Port Mapping & Connection ---')
 
-ixNetwork.info('Assign ports')
 portMap = session.PortMapAssistant()
-vport = dict()
-for index,port in enumerate(portList):
-    portName = 'Port_{}'.format(index+1)
-    vport[portName] = portMap.Map(IpAddress=port[0], CardId=port[1], PortId=port[2], Name=portName)
+vports = {}
 
-portMap.Connect(forceTakePortOwnership)
+# Map ports defined in portList [(ip, card, port), ...]
+for index, port in enumerate(portList):
+    name = 'Port_{}'.format(index+1)
+    ixNetwork.info('Mapping {} to {}:{}:{}'.format(name, port[0], port[1], port[2]))
+    vports[name] = portMap.Map(IpAddress=port[0], CardId=port[1], PortId=port[2], Name=name)
 
-# Note: If you are loading the configuration from ixia configuration file, 
-# first load the config and then Connect ports`
+# Connect and take ownership
+ixNetwork.info('Connecting to ports and taking ownership...')
+portMap.Connect(forceTakePortOwnership=True)`
             }
         ],
         pitfalls: [
@@ -48,60 +57,53 @@ portMap.Connect(forceTakePortOwnership)
             {
                 name: 'Line by Line (Runtime)',
                 language: 'python',
-                code: `ixNetwork.info('Creating Topology Group 1')
-topology1 = ixNetwork.Topology.add(Name='Topo1', Ports=vport['Port_1'])
-deviceGroup1 = topology1.DeviceGroup.add(Name='DG1', Multiplier='3')
-ethernet1 = deviceGroup1.Ethernet.add(Name='Eth1')
-ethernet1.Mac.Increment(start_value='00:01:01:01:00:01', step_value='00:00:00:00:00:01')
-ethernet1.EnableVlans.Single(True)
+                code: `"""
+Phase 2: Configuration
+Define topology, protocols, and traffic patterns.
+"""
+ixNetwork.info('--- Phase 2: Topology & Protocol Config ---')
 
-ixNetwork.info('Configuring vlanID')
-vlanObj = ethernet1.Vlan.find()[0].VlanId.Increment(start_value=103, step_value=0)
+# Configure Topology and Device Groups
+ixNetwork.info('Creating L2-3 Topology...')
+topo = ixNetwork.Topology.add(Name='Tx_Topology', Ports=vports['Port_1'])
+dg = topo.DeviceGroup.add(Name='Tx_Devices', Multiplier='10')
 
-ixNetwork.info('Configuring IPv4')
-ipv4 = ethernet1.Ipv4.add(Name='Ipv4')
-ipv4.Address.Increment(start_value='1.1.1.1', step_value='0.0.0.1')
-ipv4.GatewayIp.Increment(start_value='1.1.1.4', step_value='0.0.0.0')
+# Layer 2-3 Stack: Ethernet -> IPv4 -> BGP
+ixNetwork.info('Building Protocol Stack: Eth > IPv4 > BGP')
+eth = dg.Ethernet.add(Name='Eth_1')
+eth.Mac.Increment(start_value='00:01:01:01:00:01', step_value='00:00:00:00:00:01')
 
-ixNetwork.info('Configuring BgpIpv4Peer 1')
-bgp1 = ipv4.BgpIpv4Peer.add(Name='Bgp1')
-bgp1.DutIp.Increment(start_value='1.1.1.4', step_value='0.0.0.1')
-bgp1.Type.Single('external')
-bgp1.LocalAs2Bytes.Increment(start_value=101, step_value=0)
+ipv4 = eth.Ipv4.add(Name='IPv4_1')
+ipv4.Address.Increment(start_value='10.1.1.1', step_value='0.0.0.1')
+ipv4.GatewayIp.Single('10.1.1.10')
 
-ixNetwork.info('Configuring Network Group 1')
-networkGroup1 = deviceGroup1.NetworkGroup.add(Name='BGP-Routes1', Multiplier='100')
-ipv4PrefixPool = networkGroup1.Ipv4PrefixPools.add(NumberOfAddresses='1')
-ipv4PrefixPool.NetworkAddress.Increment(start_value='10.10.0.1', step_value='0.0.0.1')
-ipv4PrefixPool.PrefixLength.Single(32)
+bgp = ipv4.BgpIpv4Peer.add(Name='BGP_1')
+bgp.DutIp.Single('10.1.1.10')
+bgp.Type.Single('external')
 
-ixNetwork.info('Create Traffic Item')
-trafficItem = ixNetwork.Traffic.TrafficItem.add(Name='BGP Traffic', BiDirectional=False, TrafficType='ipv4')
+# Configure Traffic Item
+ixNetwork.info('Configuring Traffic Item: BGP_Traffic')
+traffic_item = ixNetwork.Traffic.TrafficItem.add(Name='BGP_Traffic', TrafficType='ipv4')
+traffic_item.EndpointSet.add(Sources=topo, Destinations=vports['Port_2'])
 
-ixNetwork.info('Add endpoint flow group')
-trafficItem.EndpointSet.add(Sources=topology1, Destinations=topology2)
-
-# Note: A Traffic Item could have multiple EndpointSets (Flow groups).
-#       Therefore, ConfigElement is a list.
-ixNetwork.info('Configuring config elements')
-configElement = trafficItem.ConfigElement.find()[0]
-configElement.FrameRate.update(Type='percentLineRate', Rate=50)
-configElement.FrameRateDistribution.PortDistribution = 'splitRateEvenly'
-configElement.FrameSize.FixedSize = 128
-trafficItem.Tracking.find()[0].TrackBy = ['flowGroup0']
-
-trafficItem.Generate()
+# Apply traffic parameters and Generate
+ixNetwork.info('Generating and Applying Traffic Control Plane...')
+traffic_item.Generate()
 ixNetwork.Traffic.Apply()`
             },
             {
                 name: 'Load Config File (Fastest)',
                 language: 'python',
-                code: `# 1) For .ixncfg configuration file
-ixNetwork.info('Loading config file: {0}'.format(configFile))
+                code: `"""
+Fast Configuration
+Bypass line-by-line calls by loading a pre-saved configuration.
+"""
+# 1) Load binary .ixncfg file
+ixNetwork.info('Loading binary config: {}'.format(configFile))
 ixNetwork.LoadConfig(Files(configFile, local_file=True))
 
-# 2) For .json configuration file 
-ixNetwork.info('\\nLoading JSON config file: {0}'.format(jsonConfigFile))
+# 2) Import JSON configuration (ResourceManager)
+ixNetwork.info('Importing JSON config via ResourceManager: {}'.format(jsonConfigFile))
 ixNetwork.ResourceManager.ImportConfigFile(Files(jsonConfigFile, local_file=True), Arg3=True)`
             }
         ],
@@ -124,16 +126,25 @@ ixNetwork.ResourceManager.ImportConfigFile(Files(jsonConfigFile, local_file=True
             {
                 name: 'Python (RestPy)',
                 language: 'python',
-                code: `ixNetwork.StartAllProtocols(Arg1='sync')
-ixNetwork.info('Verify protocol sessions')
-protocolSummary = session.StatViewAssistant('Protocols Summary')
-protocolSummary.CheckCondition('Sessions Not Started', protocolSummary.EQUAL, 0)
-protocolSummary.CheckCondition('Sessions Down', protocolSummary.EQUAL, 0)
-ixNetwork.info(protocolSummary)
+                code: `"""
+Phase 3: Execution
+Start protocols, verify convergence, and run traffic.
+"""
+ixNetwork.info('--- Phase 3: Traffic Execution ---')
 
-trafficItem = ixNetwork.Traffic.TrafficItem.find()[0]
+# Synchronous Protocol Start
+ixNetwork.info('Starting protocols and waiting for sync...')
+ixNetwork.StartAllProtocols(Arg1='sync')
 
-trafficItem.Generate()
+# Verify Protocol Sessions
+summary = session.StatViewAssistant('Protocols Summary')
+ixNetwork.info('Checking protocol health...')
+summary.CheckCondition('Sessions Not Started', summary.EQUAL, 0)
+summary.CheckCondition('Sessions Down', summary.EQUAL, 0)
+ixNetwork.info(summary)
+
+# Generate and Start Stateless Traffic
+ixNetwork.info('Applying and starting stateless traffic...')
 ixNetwork.Traffic.Apply()
 ixNetwork.Traffic.StartStatelessTrafficBlocking()`
             }
@@ -154,20 +165,27 @@ ixNetwork.Traffic.StartStatelessTrafficBlocking()`
             {
                 name: 'Python (RestPy)',
                 language: 'python',
-                code: `trafficItemStatistics = session.StatViewAssistant('Traffic Item Statistics')
+                code: `"""
+Phase 4: Verification
+Retrieve real-time statistics and validate pass/fail criteria.
+"""
+ixNetwork.info('--- Phase 4: Stat Verification ---')
 
-# StatViewAssistant could also filter by REGEX, LESS_THAN, GREATER_THAN, EQUAL. 
-# Examples:
-#    trafficItemStatistics.AddRowFilter('Port Name', trafficItemStatistics.REGEX, '^Port 1$')
-#    trafficItemStatistics.AddRowFilter('Tx Frames', trafficItemStatistics.GREATER_THAN, "5000")
+# Access Traffic Item Statistics
+stats = session.StatViewAssistant('Traffic Item Statistics')
 
-ixNetwork.info('{}\\n'.format(trafficItemStatistics))
+# Apply filters if necessary (e.g., only specific ports)
+# stats.AddRowFilter('Port Name', stats.REGEX, '^Port 1$')
 
-# Get the statistic values
-txFrames = trafficItemStatistics.Rows['Tx Frames']
-rxFrames = trafficItemStatistics.Rows['Rx Frames']
-ixNetwork.info('\\nTraffic Item Stats:\\n\\tTxFrames: {}  RxFrames: {}\\n'.format(txFrames, rxFrames))
+ixNetwork.info('Current Traffic Stats:\\n{}'.format(stats))
 
+# Extract specific counters for validation
+tx_frames = stats.Rows['Tx Frames']
+rx_frames = stats.Rows['Rx Frames']
+
+ixNetwork.info('Result Check: Tx({}) vs Rx({})'.format(tx_frames, rx_frames))
+
+# Stop traffic once verification is complete
 ixNetwork.Traffic.StopStatelessTrafficBlocking()`
             }
         ],
@@ -188,8 +206,15 @@ ixNetwork.Traffic.StopStatelessTrafficBlocking()`
             {
                 name: 'Python (RestPy)',
                 language: 'python',
-                code: `ixNetwork.Traffic.StopStatelessTrafficBlocking()
+                code: `"""
+Phase 5: Teardown
+Release resources and disconnect from the API server.
+"""
+ixNetwork.info('--- Phase 5: Resource Cleanup ---')
+
+# Stop protocols and disconnect session
 ixNetwork.StopAllProtocols()
+ixNetwork.info('Removing automated session...')
 session.Session.remove()`
             }
         ],

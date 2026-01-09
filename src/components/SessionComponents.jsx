@@ -6,9 +6,6 @@ const SessionComponents = () => {
         <div className="py-12">
             <div className="text-center mb-12">
                 <h2 className="text-3xl font-bold text-obsidian-textPrimary mb-4">IxNetwork Session Components</h2>
-                <p className="text-lg text-obsidian-textSecondary max-w-2xl mx-auto">
-                    4 different ways to perform operations on IxNetwork Session Components.
-                </p>
             </div>
 
             <div className="flex justify-center">

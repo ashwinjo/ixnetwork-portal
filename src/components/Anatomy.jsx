@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, Copy, Check, AlertTriangle, Play, Settings, Database, Activity, Archive } from 'lucide-react';
+import { ChevronDown, ChevronUp, Copy, Check, AlertTriangle, Play, Settings, Database, Activity, Archive, Terminal } from 'lucide-react';
 import { testPhases } from '../data/testPhases';
 
 const Anatomy = () => {
-    const [expandedPhase, setExpandedPhase] = useState('setup');
+    const [expandedPhase, setExpandedPhase] = useState(null);
     const [activeTabs, setActiveTabs] = useState({});
     const [copiedBlock, setCopiedBlock] = useState(null);
 
@@ -44,6 +44,41 @@ const Anatomy = () => {
                     <p className="text-lg text-obsidian-textSecondary max-w-2xl mx-auto">
                         Every automation script follows the same 5-phase lifecycle. Master this pattern to master the tool.
                     </p>
+                </div>
+
+                {/* Installation Section */}
+                <div className="bg-obsidian-1 rounded-2xl border border-obsidian-2 p-8 mb-12 shadow-xl relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <Terminal size={100} className="text-obsidian-accent" />
+                    </div>
+                    <div className="relative z-10">
+                        <h3 className="text-xl font-bold text-obsidian-textPrimary mb-4 flex items-center gap-2">
+                            <div className="w-8 h-8 rounded-lg bg-obsidian-accent/10 border border-obsidian-accent/20 flex items-center justify-center">
+                                <Archive size={18} className="text-obsidian-accent" />
+                            </div>
+                            Install ixnetwork_restpy
+                        </h3>
+                        <p className="text-sm text-obsidian-textSecondary mb-6 leading-relaxed">
+                            Before building your first test, initialize your local development environment using the official Python client.
+                        </p>
+                        <div className="bg-obsidian-0 rounded-xl p-5 font-mono text-sm text-obsidian-accent border border-obsidian-2 shadow-inner">
+                            <div className="text-obsidian-3/50 text-[10px] uppercase font-bold tracking-widest mb-3"># Terminal Setup</div>
+                            <div className="space-y-1">
+                                <div className="flex gap-4">
+                                    <span className="text-obsidian-3 opacity-30 select-none">1</span>
+                                    <span>python -m venv ixnvenv</span>
+                                </div>
+                                <div className="flex gap-4">
+                                    <span className="text-obsidian-3 opacity-30 select-none">2</span>
+                                    <span>source ixnvenv/bin/activate</span>
+                                </div>
+                                <div className="flex gap-4 pt-4">
+                                    <span className="text-obsidian-3 opacity-30 select-none">3</span>
+                                    <span className="text-obsidian-textPrimary font-bold">pip install ixnetwork-restpy</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="space-y-4">

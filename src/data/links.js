@@ -4,7 +4,7 @@ export const primaryResources = [
     {
         title: "Official Documentation",
         description: "Comprehensive API reference and guides for IxNetwork.",
-        url: "https://docs.keysight.com/display/IXNETWORK/IxNetwork+Home",
+        url: "https://www.keysight.com/us/en/products/network-test/protocol-load-test/ixnetwork.html",
         icon: Book,
         color: "bg-blue-500/10 text-blue-400 border border-blue-500/20 shadow-[0_0_10px_rgba(59,130,246,0.1)]"
     },
@@ -17,8 +17,8 @@ export const primaryResources = [
     },
     {
         title: "Sample Scripts",
-        description: "A collection of ready-to-use automation scripts and examples.",
-        url: "https://github.com/OpenIxia/IxNetwork",
+        description: "A collection of ready-to-use automation scripts and examples by Ixia Solutions Architects.",
+        url: "https://github.com/OpenIxia/IxNetwork/tree/master/RestPy/SampleScripts",
         icon: Github,
         color: "bg-obsidian-2 text-obsidian-textPrimary border border-obsidian-3"
     }
